@@ -29,19 +29,19 @@ public class UploadService {
 		List<Student> students = new ArrayList<>();
 		Iterator<Row> rows = firstSheet.iterator();
 
-		Integer isFirstRow = 0;
+		Integer firstRow = 0;
 		while (rows.hasNext()) {
 			Row row = rows.next();
 			// skip header
-			if (isFirstRow == 0) {
-				isFirstRow++;
+			if (firstRow == 0) {
+				firstRow++;
 				continue;
 			}
 
 			Iterator<Cell> cells = row.iterator();
 			Integer cellIndex = 0;
 			Student student = new Student();
-			
+
 			while (cells.hasNext()) {
 				Cell cell = cells.next();
 				switch (cellIndex) {
@@ -52,6 +52,7 @@ public class UploadService {
 				case 4 -> student.setMajor(cell.getStringCellValue());
 				case 5 -> student.setGpa(cell.getNumericCellValue());
 				}
+				cellIndex++;
 			}
 			students.add(student);
 		}
