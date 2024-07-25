@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.noprizal.test_excel.exceptions.DuplicateDataException;
 import com.noprizal.test_excel.models.Student;
 import com.noprizal.test_excel.repository.StudentRepository;
 
@@ -27,6 +28,7 @@ public class UploadService {
 		Sheet firstSheet = workbook.getSheetAt(0);
 
 		List<Student> students = new ArrayList<>();
+		List<Integer> duplicateNims = new ArrayList<>();
 		Iterator<Row> rows = firstSheet.iterator();
 
 		Integer firstRow = 0;
@@ -45,19 +47,28 @@ public class UploadService {
 			while (cells.hasNext()) {
 				Cell cell = cells.next();
 				switch (cellIndex) {
-				case 0 -> student.setId((long) cell.getNumericCellValue());
-				case 1 -> student.setName(cell.getStringCellValue());
-				case 2 -> student.setNim((int) cell.getNumericCellValue());
-				case 3 -> student.setFaculty(cell.getStringCellValue());
-				case 4 -> student.setMajor(cell.getStringCellValue());
-				case 5 -> student.setGpa(cell.getNumericCellValue());
+				case 0 -> student.setName(cell.getStringCellValue());
+				case 1 -> student.setNim((int) cell.getNumericCellValue());
+				case 2 -> student.setFaculty(cell.getStringCellValue());
+				case 3 -> student.setMajor(cell.getStringCellValue());
+				case 4 -> student.setGpa(cell.getNumericCellValue());
 				}
 				cellIndex++;
 			}
-			students.add(student);
+
+			if (studentRepo.existsByNim(student.getNim())) {
+				duplicateNims.add(student.getNim());
+			} else {
+				students.add(student);
+			}
+		}
+
+		workbook.close();
+
+		if (!duplicateNims.isEmpty()) {
+			throw new DuplicateDataException(duplicateNims);
 		}
 
 		studentRepo.saveAll(students);
-		workbook.close();
 	}
 }

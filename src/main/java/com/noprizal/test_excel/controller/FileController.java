@@ -36,10 +36,10 @@ public class FileController {
 	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
 		try {
 			uploadService.saveExcelData(file);
-			return ResponseEntity.status(HttpStatus.OK).body("File uploaded and data saved successfully! ");
+			return ResponseEntity.status(HttpStatus.OK).body("File uploaded and data saved successfully!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("An error occurred while processing the file. " + e.getMessage());
 		}
 	}

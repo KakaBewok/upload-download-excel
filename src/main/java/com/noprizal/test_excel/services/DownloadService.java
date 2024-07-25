@@ -21,7 +21,7 @@ public class DownloadService {
 	private StudentRepository studentRepo;
 
 	public ByteArrayInputStream loadExcel() throws IOException {
-		List<Student> dataList = studentRepo.findAll();
+		List<Student> students = studentRepo.findAll();
 
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("student");
@@ -35,14 +35,14 @@ public class DownloadService {
 		headerRow.createCell(5).setCellValue("gpa");
 
 		Integer rowIndex = 1;
-		for (Student data : dataList) {
+		for (Student student : students) {
 			Row row = sheet.createRow(rowIndex++);
-			row.createCell(0).setCellValue(data.getId());
-			row.createCell(1).setCellValue(data.getName());
-			row.createCell(2).setCellValue(data.getNim());
-			row.createCell(3).setCellValue(data.getFaculty());
-			row.createCell(4).setCellValue(data.getMajor());
-			row.createCell(5).setCellValue(data.getGpa());
+			row.createCell(0).setCellValue(student.getId());
+			row.createCell(1).setCellValue(student.getName());
+			row.createCell(2).setCellValue(student.getNim());
+			row.createCell(3).setCellValue(student.getFaculty());
+			row.createCell(4).setCellValue(student.getMajor());
+			row.createCell(5).setCellValue(student.getGpa());
 		}
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
