@@ -20,27 +20,35 @@ public class DownloadService {
 	@Autowired
 	private StudentRepository studentRepo;
 
-	 public ByteArrayInputStream loadExcel() throws IOException {
-	        List<Student> dataList = studentRepo.findAll();
+	public ByteArrayInputStream loadExcel() throws IOException {
+		List<Student> dataList = studentRepo.findAll();
 
-	        Workbook workbook = new XSSFWorkbook();
-	        Sheet sheet = workbook.createSheet("Data");
+		Workbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("student");
 
-	        Row headerRow = sheet.createRow(0);
-	        headerRow.createCell(0).setCellValue("Name");
-	        headerRow.createCell(1).setCellValue("Age");
+		Row headerRow = sheet.createRow(0);
+		headerRow.createCell(0).setCellValue("id");
+		headerRow.createCell(1).setCellValue("name");
+		headerRow.createCell(2).setCellValue("nim");
+		headerRow.createCell(3).setCellValue("faculty");
+		headerRow.createCell(4).setCellValue("major");
+		headerRow.createCell(5).setCellValue("gpa");
 
-	        int rowIndex = 1;
-	        for (Student data : dataList) {
-	            Row row = sheet.createRow(rowIndex++);
-//	            row.createCell(0).setCellValue(data.getName());
-//	            row.createCell(1).setCellValue(data.getAge());
-	        }
+		Integer rowIndex = 1;
+		for (Student data : dataList) {
+			Row row = sheet.createRow(rowIndex++);
+			row.createCell(0).setCellValue(data.getId());
+			row.createCell(1).setCellValue(data.getName());
+			row.createCell(2).setCellValue(data.getNim());
+			row.createCell(3).setCellValue(data.getFaculty());
+			row.createCell(4).setCellValue(data.getMajor());
+			row.createCell(5).setCellValue(data.getGpa());
+		}
 
-	        ByteArrayOutputStream out = new ByteArrayOutputStream();
-	        workbook.write(out);
-	        workbook.close();
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		workbook.write(out);
+		workbook.close();
 
-	        return new ByteArrayInputStream(out.toByteArray());
-	    }
+		return new ByteArrayInputStream(out.toByteArray());
+	}
 }
